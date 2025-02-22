@@ -274,6 +274,11 @@ jobs:
           echo "CONFIG_IP6_NF_TARGET_HL=y" >> ./common/arch/arm64/configs/gki_defconfig
           echo "CONFIG_IP6_NF_MATCH_HL=y" >> ./common/arch/arm64/configs/gki_defconfig
 
+
+          echo "CONFIG_KVM_ARM_HOST=y" >> ./common/arch/arm64/configs/gki_defconfig
+          echo "CONFIG_KVM_MMIO=y" >> ./common/arch/arm64/configs/gki_defconfig
+
+
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./common/build.config.gki
 
