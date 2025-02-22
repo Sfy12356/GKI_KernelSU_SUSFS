@@ -1,4 +1,4 @@
-name: Configure Server
+name: Configure Local Server
 
 permissions:
   contents: write  # 允许写入仓库内容（例如推送标签）
@@ -7,14 +7,6 @@ permissions:
 on:
   workflow_dispatch:  # 允许手动触发工作流
     inputs:
-      server_ip:
-        description: 'Remote server IP address'
-        required: true
-        type: string
-      ssh_private_key:
-        description: 'SSH private key'
-        required: true
-        type: string
       root_password:
         description: 'New root password'
         required: true
@@ -36,29 +28,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up SSH
+    - name: Modify root password (local)
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ inputs.ssh_private_key }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ inputs.server_ip }} >> ~/.ssh/known_hosts
+        echo "root:${{ inputs.root_password }}" | sudo chpasswd
 
-    - name: Modify root password
+    - name: Install and configure frpc (local)
       run: |
-        ssh root@${{ inputs.server_ip }} "echo 'root:${{ inputs.root_password }}' | chpasswd"
-
-    - name: Install and configure frpc
-      run: |
-        ssh root@${{ inputs.server_ip }} "wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz"
-        ssh root@${{ inputs.server_ip }} "tar -xzf frp_0.51.3_linux_amd64.tar.gz"
-        ssh root@${{ inputs.server_ip }} "mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc"
-        ssh root@${{ inputs.server_ip }} "chmod +x /usr/local/bin/frpc"
-        ssh root@${{ inputs.server_ip }} "echo '[common]
+        wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz
+        tar -xzf frp_0.51.3_linux_amd64.tar.gz
+        sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
+        sudo chmod +x /usr/local/bin/frpc
+        echo '[common]
         server_addr = ${{ inputs.frp_server_addr }}
         server_port = ${{ inputs.frp_server_port }}
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
         local_port = 22
-        remote_port = 6000' > /etc/frpc.ini"
-        ssh root@${{ inputs.server_ip }} "frpc -c /etc/frpc.ini &"
+        remote_port = 6000' | sudo tee /etc/frpc.ini
+        sudo frpc -c /etc/frpc.ini &
