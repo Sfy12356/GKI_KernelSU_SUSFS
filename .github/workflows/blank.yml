@@ -6,35 +6,41 @@ permissions:
 
 on:
   workflow_dispatch:  # 允许手动触发工作流
-    
-      
 
 jobs:
   configure:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Modify root password (local)
-      run: |
-        echo "root:Wex12356" | sudo chpasswd
+      - name: Modify root password (local)
+        run: |
+          echo "root:Wex12356" | sudo chpasswd
 
-    - name: Allow root login (local)
-      run: |
-        sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-        sudo systemctl restart ssh
+      - name: Allow root login (local)
+        run: |
+          sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sudo sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 60/' /etc/ssh/sshd_config
+          sudo sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 720/' /etc/ssh/sshd_config
+          sudo systemctl restart ssh
 
-    - name: Install and configure frpc (local)
-      run: |
-        wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz
-        tar -xzf frp_0.51.3_linux_amd64.tar.gz
-        sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
-        sudo chmod +x /usr/local/bin/frpc
-        echo '[common]
-        server_addr = 8.138.113.209
-        server_port = 7000
+      - name: Install and configure frpc (local)
+        run: |
+          wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz
+          tar -xzf frp_0.51.3_linux_amd64.tar.gz
+          sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
+          sudo chmod +x /usr/local/bin/frpc
+          echo '[common]
+          server_addr = 8.138.113.209
+          server_port = 7000
+          [ssh]
+          type = tcp
+          local_ip = 127.0.0.1
+          local_port = 22
+          remote_port = 6000' | sudo tee /etc/frpc.ini
+          sudo frpc -c /etc/frpc.ini        server_port = 7000
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
