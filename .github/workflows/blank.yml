@@ -1,0 +1,41 @@
+name: Deploy and Configure frpc
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-frpc:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Install frpc
+      run: |
+        ssh root@${{ secrets.SSH_HOST }} "opkg update && opkg install frpc luci-app-frpc"
+
+    - name: Configure frpc
+      run: |
+        ssh root@${{ secrets.SSH_HOST }} "echo '[common]
+        server_addr = ${{ secrets.FRP_SERVER_ADDR }}
+        server_port = ${{ secrets.FRP_SERVER_PORT }}
+        token = ${{ secrets.FRP_TOKEN }}
+        [ssh]
+        type = tcp
+        local_ip = 127.0.0.1
+        local_port = 22
+        remote_port = 6000' > /etc/config/frpc"
+
+    - name: Restart frpc service
+      run: |
+        ssh root@${{ secrets.SSH_HOST }} "/etc/init.d/frpc restart"
