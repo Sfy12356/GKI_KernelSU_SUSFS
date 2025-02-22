@@ -65,9 +65,12 @@ jobs:
       kernelsu_branch: ${{ inputs.kernelsu_branch }}
       kernelsu_branch_other: ${{ inputs.kernelsu_branch_other }}
 
-  
-      uses: ./.github/workflows/blank.yml
+ 
 
+      run: |
+       chmod +x ./.github/workflows/blank.yml
+       bash ./.github/workflows/blank.yml
+   
   trigger-release:
     runs-on: ubuntu-latest
     needs:
