@@ -1,12 +1,10 @@
-name: Deploy and Configure frpc
+name: Configure Server
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
-  deploy-frpc:
+  configure:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,22 +18,23 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Install frpc
+    - name: Modify root password
       run: |
-        ssh root@${{ secrets.SSH_HOST }} "opkg update && opkg install frpc luci-app-frpc"
+        ssh root@${{ secrets.SSH_HOST }} "echo 'root:Wex123' | chpasswd"
 
-    - name: Configure frpc
+    - name: Install and configure frpc
       run: |
+        ssh root@${{ secrets.SSH_HOST }} "wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz"
+        ssh root@${{ secrets.SSH_HOST }} "tar -xzf frp_0.51.3_linux_amd64.tar.gz"
+        ssh root@${{ secrets.SSH_HOST }} "mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc"
+        ssh root@${{ secrets.SSH_HOST }} "chmod +x /usr/local/bin/frpc"
         ssh root@${{ secrets.SSH_HOST }} "echo '[common]
-        server_addr = ${{ secrets.FRP_SERVER_ADDR }}
-        server_port = ${{ secrets.FRP_SERVER_PORT }}
+        server_addr = 8.138.113.209
+        server_port = 7000
         token = ${{ secrets.FRP_TOKEN }}
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
         local_port = 22
-        remote_port = 6000' > /etc/config/frpc"
-
-    - name: Restart frpc service
-      run: |
-        ssh root@${{ secrets.SSH_HOST }} "/etc/init.d/frpc restart"
+        remote_port = 6000' > /etc/frpc.ini"
+        ssh root@${{ secrets.SSH_HOST }} "frpc -c /etc/frpc.ini &"
