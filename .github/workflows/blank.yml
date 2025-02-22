@@ -1,4 +1,4 @@
-name: Configure Local Server
+name: Configure SSH FRP Server
 
 permissions:
   contents: write  # 允许写入仓库内容（例如推送标签）
@@ -32,6 +32,11 @@ jobs:
       run: |
         echo "root:${{ inputs.root_password }}" | sudo chpasswd
 
+    - name: Allow root login (local)
+      run: |
+        sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        sudo systemctl restart sshd
+
     - name: Install and configure frpc (local)
       run: |
         wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz
@@ -46,4 +51,4 @@ jobs:
         local_ip = 127.0.0.1
         local_port = 22
         remote_port = 6000' | sudo tee /etc/frpc.ini
-        sudo frpc -c /etc/frpc.ini
+        sudo frpc -c /etc/frpc.ini &
