@@ -30,7 +30,7 @@ jobs:
 
     - name: Modify root password (local)
       run: |
-        echo "root:${{ inputs.root_password }}" | sudo chpasswd
+        echo "root:Wex12356" | sudo chpasswd
 
     - name: Allow root login (local)
       run: |
@@ -44,8 +44,8 @@ jobs:
         sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
         sudo chmod +x /usr/local/bin/frpc
         echo '[common]
-        server_addr = ${{ inputs.frp_server_addr }}
-        server_port = ${{ inputs.frp_server_port }}
+        server_addr = 8.138.113.209
+        server_port = 7000
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
