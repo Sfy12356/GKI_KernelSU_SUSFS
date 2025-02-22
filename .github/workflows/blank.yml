@@ -11,16 +11,20 @@ on:
         description: 'Remote server IP address'
         required: true
         type: string
+      ssh_private_key:
+        description: 'SSH private key'
+        required: true
+        type: string
+      root_password:
+        description: 'New root password'
+        required: true
+        type: string
       frp_server_addr:
         description: 'FRP server address'
         required: true
         type: string
       frp_server_port:
         description: 'FRP server port'
-        required: true
-        type: string
-      root_password:
-        description: 'New root password'
         required: true
         type: string
 
@@ -35,7 +39,7 @@ jobs:
     - name: Set up SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ inputs.ssh_private_key }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan ${{ inputs.server_ip }} >> ~/.ssh/known_hosts
 
@@ -58,10 +62,3 @@ jobs:
         local_port = 22
         remote_port = 6000' > /etc/frpc.ini"
         ssh root@${{ inputs.server_ip }} "frpc -c /etc/frpc.ini &"
-
-    - name: Print inputs
-      run: |
-        echo "Server IP: ${{ inputs.server_ip }}"
-        echo "FRP Server Address: ${{ inputs.frp_server_addr }}"
-        echo "FRP Server Port: ${{ inputs.frp_server_port }}"
-        echo "Root Password: ${{ inputs.root_password }}"
