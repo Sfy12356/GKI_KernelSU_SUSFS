@@ -54,13 +54,8 @@ on:
         default: ""  # Default is empty, but can be filled in if 'Other' is selected
 
 jobs:
-
-
-   blank:  
-    uses: ./.github/workflows/blank.yml
-
- 
-   build-kernel-a13-5-15:
+  
+  build-kernel-a13-5-15:
     uses: ./.github/workflows/kernel-a13-5.15.yml
     secrets: inherit
     with:
@@ -70,7 +65,8 @@ jobs:
       kernelsu_branch: ${{ inputs.kernelsu_branch }}
       kernelsu_branch_other: ${{ inputs.kernelsu_branch_other }}
 
-
+  blank:  
+   uses: ./.github/workflows/blank.yml
 
   trigger-release:
     runs-on: ubuntu-latest
