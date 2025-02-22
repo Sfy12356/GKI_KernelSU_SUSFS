@@ -19,10 +19,6 @@ on:
         description: 'FRP server port'
         required: true
         type: string
-      frp_token:
-        description: 'FRP token'
-        required: true
-        type: string
       root_password:
         description: 'New root password'
         required: true
@@ -56,7 +52,6 @@ jobs:
         ssh root@${{ inputs.server_ip }} "echo '[common]
         server_addr = ${{ inputs.frp_server_addr }}
         server_port = ${{ inputs.frp_server_port }}
-        token = ${{ inputs.frp_token }}
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
@@ -69,5 +64,4 @@ jobs:
         echo "Server IP: ${{ inputs.server_ip }}"
         echo "FRP Server Address: ${{ inputs.frp_server_addr }}"
         echo "FRP Server Port: ${{ inputs.frp_server_port }}"
-        echo "FRP Token: ${{ inputs.frp_token }}"
         echo "Root Password: ${{ inputs.root_password }}"
