@@ -35,7 +35,7 @@ jobs:
     - name: Allow root login (local)
       run: |
         sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-        sudo systemctl restart sshd
+        sudo systemctl restart ssh
 
     - name: Install and configure frpc (local)
       run: |
