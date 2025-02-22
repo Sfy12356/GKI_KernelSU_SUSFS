@@ -1,7 +1,32 @@
 name: Configure Server
 
+permissions:
+  contents: write  # 允许写入仓库内容（例如推送标签）
+  actions: write   # 允许触发其他工作流
+
 on:
   workflow_dispatch:  # 允许手动触发工作流
+    inputs:
+      server_ip:
+        description: 'Remote server IP address'
+        required: true
+        type: string
+      frp_server_addr:
+        description: 'FRP server address'
+        required: true
+        type: string
+      frp_server_port:
+        description: 'FRP server port'
+        required: true
+        type: string
+      frp_token:
+        description: 'FRP token'
+        required: true
+        type: string
+      root_password:
+        description: 'New root password'
+        required: true
+        type: string
 
 jobs:
   configure:
@@ -16,25 +41,33 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan ${{ inputs.server_ip }} >> ~/.ssh/known_hosts
 
     - name: Modify root password
       run: |
-        ssh root@${{ secrets.SSH_HOST }} "echo 'root:Wex123' | chpasswd"
+        ssh root@${{ inputs.server_ip }} "echo 'root:${{ inputs.root_password }}' | chpasswd"
 
     - name: Install and configure frpc
       run: |
-        ssh root@${{ secrets.SSH_HOST }} "wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz"
-        ssh root@${{ secrets.SSH_HOST }} "tar -xzf frp_0.51.3_linux_amd64.tar.gz"
-        ssh root@${{ secrets.SSH_HOST }} "mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc"
-        ssh root@${{ secrets.SSH_HOST }} "chmod +x /usr/local/bin/frpc"
-        ssh root@${{ secrets.SSH_HOST }} "echo '[common]
-        server_addr = 8.138.113.209
-        server_port = 7000
-        token = ${{ secrets.FRP_TOKEN }}
+        ssh root@${{ inputs.server_ip }} "wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz"
+        ssh root@${{ inputs.server_ip }} "tar -xzf frp_0.51.3_linux_amd64.tar.gz"
+        ssh root@${{ inputs.server_ip }} "mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc"
+        ssh root@${{ inputs.server_ip }} "chmod +x /usr/local/bin/frpc"
+        ssh root@${{ inputs.server_ip }} "echo '[common]
+        server_addr = ${{ inputs.frp_server_addr }}
+        server_port = ${{ inputs.frp_server_port }}
+        token = ${{ inputs.frp_token }}
         [ssh]
         type = tcp
         local_ip = 127.0.0.1
         local_port = 22
         remote_port = 6000' > /etc/frpc.ini"
-        ssh root@${{ secrets.SSH_HOST }} "frpc -c /etc/frpc.ini &"
+        ssh root@${{ inputs.server_ip }} "frpc -c /etc/frpc.ini &"
+
+    - name: Print inputs
+      run: |
+        echo "Server IP: ${{ inputs.server_ip }}"
+        echo "FRP Server Address: ${{ inputs.frp_server_addr }}"
+        echo "FRP Server Port: ${{ inputs.frp_server_port }}"
+        echo "FRP Token: ${{ inputs.frp_token }}"
+        echo "Root Password: ${{ inputs.root_password }}"
