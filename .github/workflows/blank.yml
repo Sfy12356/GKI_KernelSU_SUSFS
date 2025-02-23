@@ -30,7 +30,7 @@ jobs:
       - name: Install and configure cpolar (local)
         run: |
          sudo apt install wget
-         sodo wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
+         sudo wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
          sudo apt install unzip -y
          sudo unzip cpolar-stable-linux-amd64.zip
          sudo chmod 777 cpolar
