@@ -24,6 +24,8 @@ jobs:
           sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
           sudo sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 60/' /etc/ssh/sshd_config
           sudo sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 720/' /etc/ssh/sshd_config
+          sudo sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 60/' /etc/ssh/ssh_config
+          sudo sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 720/' /etc/ssh/ssh_config
           sudo systemctl restart ssh
 
       - name: Install and configure frpc (local)
