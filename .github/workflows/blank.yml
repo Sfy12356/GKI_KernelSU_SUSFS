@@ -36,14 +36,11 @@ jobs:
           echo '[common]
           server_addr = 8.138.113.209
           server_port = 7000
-
           # 禁用心跳超时
           heartbeat_interval = 0
           heartbeat_timeout = 0
-
           # 禁用 TCP 多路复用的心跳检查
           tcp_mux_keepalive_interval = 0
-
           [ssh]
           type = tcp
           local_ip = 127.0.0.1
