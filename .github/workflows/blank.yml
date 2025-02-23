@@ -24,8 +24,7 @@ jobs:
           sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
           sudo sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 60/' /etc/ssh/sshd_config
           sudo sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 720/' /etc/ssh/sshd_config
-          sudo sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 60/' /etc/ssh/ssh_config
-          sudo sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 720/' /etc/ssh/ssh_config
+          
           sudo systemctl restart ssh
 
       - name: Install and configure frpc (local)
@@ -34,9 +33,16 @@ jobs:
           tar -xzf frp_0.51.3_linux_amd64.tar.gz
           sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
           sudo chmod +x /usr/local/bin/frpc
-          echo '[common]
+          [common]
           server_addr = 8.138.113.209
           server_port = 7000
+          # 禁用心跳机制（设置为负值或较大值）
+          heartbeatInterval = -1
+          heartbeatTimeout = -1
+          # 禁用 TCP 多路复用的心跳检查（设置为负值或较大值）
+          tcpMuxKeepaliveInterval = -1
+          # 禁用连接服务端的超时（设置为负值或较大值）
+          dialServerTimeout = -1
           [ssh]
           type = tcp
           local_ip = 127.0.0.1
