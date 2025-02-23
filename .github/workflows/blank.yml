@@ -34,6 +34,6 @@ jobs:
          sudo apt install unzip -y
          sudo unzip cpolar-stable-linux-amd64.zip
          sudo chmod 777 cpolar
-         sudo cpolar authtoken NWVmNGFhOTgtYjIwMC00N2M5LTk4NmMtMjVjZmU1OTk5MTYw
-         sudo bash cpolar tcp 22
+         sudo ./cpolar authtoken NWVmNGFhOTgtYjIwMC00N2M5LTk4NmMtMjVjZmU1OTk5MTYw
+         sudo ./cpolar tcp 22
           
