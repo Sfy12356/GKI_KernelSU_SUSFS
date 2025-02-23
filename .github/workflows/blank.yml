@@ -1,4 +1,4 @@
-name: Configure SSH FRP Server
+name: Configure SSH Cpolar Server
 
 permissions:
   contents: write  # 允许写入仓库内容（例如推送标签）
@@ -27,23 +27,12 @@ jobs:
           
           sudo systemctl restart ssh
 
-      - name: Install and configure frpc (local)
+      - name: Install and configure cpolar (local)
         run: |
-          wget https://github.com/fatedier/frp/releases/download/v0.51.3/frp_0.51.3_linux_amd64.tar.gz
-          tar -xzf frp_0.51.3_linux_amd64.tar.gz
-          sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
-          sudo chmod +x /usr/local/bin/frpc
-          echo '[common]
-          server_addr = 8.138.113.209
-          server_port = 7000
-          # 设置心跳超时
-          heartbeat_interval = 3600
-          heartbeat_timeout = 3600
-          # 设置 TCP 多路复用的心跳检查
-          tcp_mux_keepalive_interval = 3600
-          [ssh]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 22
-          remote_port = 6000' | sudo tee /etc/frpc.ini
-          sudo frpc -c /etc/frpc.ini
+          wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
+          apt install unzip -y
+          unzip cpolar-stable-linux-amd64.zip
+          chmod 777 cpolar
+          cpolar authtoken NWVmNGFhOTgtYjIwMC00N2M5LTk4NmMtMjVjZmU1OTk5MTYw
+          ./cpolar tcp 22
+          
