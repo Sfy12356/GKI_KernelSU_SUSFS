@@ -33,7 +33,7 @@ jobs:
           tar -xzf frp_0.51.3_linux_amd64.tar.gz
           sudo mv frp_0.51.3_linux_amd64/frpc /usr/local/bin/frpc
           sudo chmod +x /usr/local/bin/frpc
-          [common]
+          echo '[common]
           server_addr = 8.138.113.209
           server_port = 7000
           # 禁用心跳机制（设置为负值或较大值）
