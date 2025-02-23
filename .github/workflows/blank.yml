@@ -29,10 +29,11 @@ jobs:
 
       - name: Install and configure cpolar (local)
         run: |
-          wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
-          apt install unzip -y
-          unzip cpolar-stable-linux-amd64.zip
-          chmod 777 cpolar
-          cpolar authtoken NWVmNGFhOTgtYjIwMC00N2M5LTk4NmMtMjVjZmU1OTk5MTYw
-          ./cpolar tcp 22
+         sudo apt install wget
+         sodo wget https://www.cpolar.com/static/downloads/releases/3.3.18/cpolar-stable-linux-amd64.zip
+         sudo apt install unzip -y
+         sudo unzip cpolar-stable-linux-amd64.zip
+         sudo chmod 777 cpolar
+         sudo cpolar authtoken NWVmNGFhOTgtYjIwMC00N2M5LTk4NmMtMjVjZmU1OTk5MTYw
+         sudo ./cpolar tcp 22
           
