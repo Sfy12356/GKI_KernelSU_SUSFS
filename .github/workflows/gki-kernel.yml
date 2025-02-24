@@ -155,7 +155,7 @@ jobs:
         run: |
           echo "Changing to configuration directory: $CONFIG..."
           cd "$CONFIG"
-          :'
+          : '
           #LXC容器
           git clone https://github.com/Sfy12356/GKI_KernelSU_SUSFS.git
           cd GKI_KernelSU_SUSFS
