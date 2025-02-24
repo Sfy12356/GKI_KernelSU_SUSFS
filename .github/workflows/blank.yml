@@ -13,7 +13,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+      #  uses: actions/checkout@v2
+        uses: easimon/maximize-build-space@master
+
 
       - name: Modify root password (local)
         run: |
