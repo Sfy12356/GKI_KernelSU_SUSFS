@@ -170,7 +170,7 @@ jobs:
           sudo mkdir -p /root/Toolchain
           sudo tar xf Toolchain.tar -C /root/Toolchain
           sudo chmod 777 /root/Toolchain  -R
-          sufo cp -rf LXC-patch1.sh ../common/
+          sudo cp -rf  /root/Toolchain/LXC-patch1.sh ../common/
           cd ../common/
           sudo chmod 777 LXC-patch1.sh
           sudo ./LXC-patch1.sh
