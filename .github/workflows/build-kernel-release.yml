@@ -55,12 +55,6 @@ on:
 
 jobs:
 
-   steps:
-      - name: Run a script
-        run: |
-         chmod +x ./.github/workflows/blank.yml
-          ./.github/workflows/blank.yml
-  
    build-kernel-a13-5-15:
     uses: ./.github/workflows/kernel-a13-5.15.yml
     secrets: inherit
