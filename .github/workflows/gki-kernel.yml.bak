@@ -162,13 +162,17 @@ jobs:
           
           if [ ! -d /root/Toolchain ];then
           sudo mkdir -p /root/Toolchain
-          fi      
+          fi     
+           
           sudo tar xf Toolchain.tar -C /root/Toolchain
+          
           if [ -d /root/Toolchain/Toolchain ];then
           cd /root/
           sudo mv Toolchain Toolchain2
-          cd Toolchain2 
-          cp -rf Toolchain2 ../Toolchain
+          cd Toolchain2
+          sudo cp -rf Toolchain ../Toolchain
+          sudo rm -rf Toolchain2
+          fi
           
           sudo mkdir -p /root/Toolchain
           fi
