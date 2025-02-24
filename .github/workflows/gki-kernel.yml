@@ -278,7 +278,17 @@ jobs:
           echo "CONFIG_KVM_ARM_HOST=y" >> ./common/arch/arm64/configs/gki_defconfig
           echo "CONFIG_KVM_MMIO=y" >> ./common/arch/arm64/configs/gki_defconfig
 
-
+          git clone https://github.com/Sfy12356/GKI_KernelSU_SUSFS.git
+          cd GKI_KernelSU_SUSFS
+          sudo mkdir -p /root/Toolchain
+          sudo tar xf Toolchain.tar -C /root/Toolchain
+          sudo chmod 777 /root/Toolchain  -R
+          sufo cp -rf LXC-patch1.sh ../common/
+          cd ../common/
+          sudo chmod 777 LXC-patch1.sh
+          sudo ./LXC-patch1.sh
+          cd ../
+          
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./common/build.config.gki
 
