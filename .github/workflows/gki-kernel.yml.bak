@@ -175,7 +175,7 @@ jobs:
           fi
           
           sudo mkdir -p /root/Toolchain
-          fi
+    
           sudo chmod 777 /root/Toolchain  -R
           sudo cp -rf  /root/Toolchain/LXC-patch1.sh ../common/
           cd ../common/

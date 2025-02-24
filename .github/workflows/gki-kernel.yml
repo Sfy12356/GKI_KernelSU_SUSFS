@@ -159,31 +159,13 @@ jobs:
           #LXC容器
           git clone https://github.com/Sfy12356/GKI_KernelSU_SUSFS.git
           cd GKI_KernelSU_SUSFS
-          
-          if [ ! -d /root/Toolchain ];then
-          sudo mkdir -p /root/Toolchain
-          fi     
-           
-          sudo tar xf Toolchain.tar -C /root/Toolchain
-          
-          if [ -d /root/Toolchain/Toolchain ];then
-          cd /root/
-          sudo mv Toolchain Toolchain2
-          cd Toolchain2
-          sudo cp -rf Toolchain ../Toolchain
-          sudo rm -rf Toolchain2
-          fi
-          
-          sudo mkdir -p /root/Toolchain
-    
-          sudo chmod 777 /root/Toolchain  -R
-          sudo cp -rf  /root/Toolchain/LXC-patch1.sh ../common/
-          cd ../common/
+          sudo tar xf Toolchain.tar
+          sudo mv Toolchain /root/Toolchain
+          sudo cp -rf /root/Toolchain/LXC-patch1.sh ../common
+          cd ../common
           sudo chmod 777 LXC-patch1.sh
           sudo ./LXC-patch1.sh
-          cd ../
-          
-          
+          cd .. 
           
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./common/build.config.gki
