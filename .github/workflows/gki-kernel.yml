@@ -155,7 +155,7 @@ jobs:
         run: |
           echo "Changing to configuration directory: $CONFIG..."
           cd "$CONFIG"
-          
+          :'
           #LXC容器
           git clone https://github.com/Sfy12356/GKI_KernelSU_SUSFS.git
           cd GKI_KernelSU_SUSFS
@@ -166,7 +166,7 @@ jobs:
           sudo chmod 777 LXC-patch1.sh
           sudo ./LXC-patch1.sh
           cd .. 
-          
+          '
           # Remove check_defconfig
           sed -i 's/check_defconfig//' ./common/build.config.gki
 
