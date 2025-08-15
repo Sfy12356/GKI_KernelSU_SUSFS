@@ -492,7 +492,10 @@ jobs:
           
           if [ ! -z ${{ inputs.version }} ]; then
             echo "版本号不为空"
-            sed -i '$s|echo "\$res"|echo "${{ inputs.version }}"|' ./common/scripts/setlocalversion
+            sed -i '1i#!/bin/sh' ./common/scripts/setlocalversion  # 确保 shebang 存在
+            sed -i '2i# SPDX-License-Identifier: GPL-2.0' ./common/scripts/setlocalversion  # 保留许可证信息
+            sed -i '3,$d' ./common/scripts/setlocalversion  # 删除原有逻辑
+            sed -i '$a echo "Android-13-5.15.170"' ./common/scripts/setlocalversion  # 直接输出目标版本
           else
             echo "版本号为空，使用默认值"
             sed -i '$s|echo "\$res"|echo "\$res-zakozakoooooo-1145141919"|' ./common/scripts/setlocalversion
